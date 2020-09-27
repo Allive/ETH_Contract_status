@@ -41,7 +41,10 @@ function convertToFront(array){
     return {deposits:array}
 }
 
-
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
 
 try{
     app.get('/API/depositDetails', async (req,res)=>{
