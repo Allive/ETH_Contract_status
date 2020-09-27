@@ -1,6 +1,6 @@
 import express from 'express'
 const app = express();
-const port = 1310;
+const port = 9090;
 import sqlite3 from 'sqlite3'
 
 
