@@ -1,7 +1,14 @@
 import express from 'express'
 import ethGetter from './ethGetter.js'
+import fs from 'fs'
+import http from 'http'
+import https from 'https'
+try{
+    var privateKey  = fs.readFileSync('/etc/letsencrypt/live/keep-deposit.com/privkey.pem', 'utf8');
+    var certificate = fs.readFileSync('/etc/letsencrypt/live/keep-deposit.com/cert.pem', 'utf8');
+}catch(e){console.log(e)}
+var credentials = {key: privateKey, cert: certificate};
 const app = express();
-const port = 9090;
 import sqlite3 from 'sqlite3'
 
 
@@ -13,9 +20,13 @@ const db = new sqlite3.Database('./database.db', (err) => {
   });
 
 function startServer() {
-    app.listen(port, () => {
+   var httpServer = http.createServer(app);
+   var httpsServer = https.createServer(credentials, app);
+   httpServer.listen(9090);
+   httpsServer.listen(9443);
+/*app.listen(port, () => {
         console.log(`App listening port: ${port}`);
-    });
+    });*/
 }
 
 
