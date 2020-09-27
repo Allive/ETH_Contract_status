@@ -1,6 +1,9 @@
 
 import ETHgetter from './ethGetter.js'
 import expressServer from './server.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 
 function startETHgetter(){ 
