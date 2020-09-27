@@ -1,7 +1,7 @@
 import express from 'express'
 import path from 'path'
 import cookieParser from 'cookie-parser'
-s
+
 var app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

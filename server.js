@@ -24,9 +24,6 @@ function startServer() {
    var httpsServer = https.createServer(credentials, app);
    httpServer.listen(9090);
    httpsServer.listen(9443);
-/*app.listen(port, () => {
-        console.log(`App listening port: ${port}`);
-    });*/
 }
 
 
