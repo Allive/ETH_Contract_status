@@ -146,7 +146,7 @@ async function main(){
             
             })
             .catch(error => {
-                console.log(error)
+                console.log(error) 
             })
         }, 600000)
     })
