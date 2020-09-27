@@ -103,7 +103,7 @@ async function connect(){
             )`);
     })
 
-    web3 = await new Web3('https://mainnet.infura.io/v3/4d4d0f30284345bd9867a919f23c27adls')
+    web3 = await new Web3('https://mainnet.infura.io/v3/4d4d0f30284345bd9867a919f23c27ad')
     tbtc = await TBTC.withConfig({
         web3: web3,
         bitcoinNetwork: "main",

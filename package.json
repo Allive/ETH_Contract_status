@@ -1,7 +1,7 @@
 {
   "name": "eth_contract_status",
   "type": "module",
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "dependencies": {
