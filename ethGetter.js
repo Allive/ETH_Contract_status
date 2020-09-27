@@ -153,14 +153,14 @@ async function main(){
     setInterval(() =>{
         if(firstInitialize)
             return
-        getEvents(10).then(() => {
-            console.log("Last 10 done!")
+        getEvents(20).then(() => {
+            console.log("Last 20 done!")
         
         })
         .catch(error => {
             console.log(error)
         })
-    },30000)
+    },60000)
     
 }
 
