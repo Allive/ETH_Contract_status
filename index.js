@@ -3,7 +3,7 @@ import ETHgetter from './ethGetter.js'
 import expressServer from './server.js'
 
 
-function startETHgetter(){
+function startETHgetter(){ 
     try{
         ETHgetter.startAll()
     }catch(e){
