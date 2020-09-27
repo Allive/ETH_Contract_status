@@ -72,6 +72,50 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, web3, tbtc){
     return deposits
 }
 
+
+async function getDeposit(txHash){
+    try{
+        let thisDeposit = {
+            txHash: txHash
+        }
+        let transactionInfo = await web3.eth.getTransactionReceipt(thisDeposit.txHash)
+        let transactionsSatoshis = await (web3.eth.getTransaction(thisDeposit.txHash))
+        thisDeposit.BTCamount = parseFloat(web3.eth.abi.decodeParameter('uint64', transactionsSatoshis.input.slice(-64)))*0.00000001 
+        // Mismatch web3 and EthereumHelpers versions
+        if(typeof transactionInfo.events == 'undefined'){
+            transactionInfo.events = transactionInfo.logs
+            for(let eventTX =0; eventTX < transactionInfo.events.length; eventTX++){
+                if(typeof transactionInfo.events[eventTX].raw =='undefined')
+                    transactionInfo.events[eventTX].raw={
+                        topics: transactionInfo.events[eventTX].topics,
+                        data: transactionInfo.events[eventTX].data,
+                    }
+            }
+        }
+        //End mismatch
+        thisDeposit.depositAddress = (await EthereumHelpers.readEventFromTransaction(web3,transactionInfo,tBTCfactoryContract,'DepositCloneCreated'))[0]
+        const deposit = await tbtc.Deposit.withAddress(thisDeposit.depositAddress)
+        thisDeposit.state = findThisState(deposit.factory.State, await deposit.getCurrentState())
+        thisDeposit.keepAddress = deposit.keepContract._address
+        try{
+            thisDeposit.nowConfirmations = await deposit.fundingConfirmations
+        }catch(e){
+
+        }
+        thisDeposit.timestamp = (await web3.eth.getBlock(transactionInfo.blockNumber)).timestamp
+        thisDeposit.requiredConfirmations = await deposit.requiredConfirmations
+        let valuesToInsert = Object.values(thisDeposit).map((element)=>{
+                return `"${element}"`
+        }).toString()
+    
+        db.run(`INSERT INTO deposits ("id",${Object.keys(thisDeposit)}) values ((SELECT IFNULL(MAX(id), 0) + 1 FROM deposits), ${valuesToInsert})
+            ON CONFLICT(depositAddress) DO UPDATE SET state="${thisDeposit.state}" where depositAddress="${thisDeposit.depositAddress}"`)
+
+        return thisDeposit
+    }catch(e){console.log(e)}
+}
+
+
 async function getEvents(shiftSearching) {
  
     
@@ -136,8 +180,7 @@ async function main(){
     */
     let firstInitialize = true
     await connect()
-
-    getEvents(0).then(()=>{
+    /*getEvents(0).then(()=>{
         firstInitialize = false
         setInterval( ()=>{
             getEvents(0)
@@ -161,10 +204,11 @@ async function main(){
             console.log(error)
         })
     },30000)
-    
+    */
 }
 
 function startAll(){
+    
     try{
         main()
     }catch(e){
@@ -173,11 +217,8 @@ function startAll(){
     }
 }
 
-function check(){
-    console.log('check')
-}
 
 export default {
     startAll,
-    check
+    getDeposit
 }

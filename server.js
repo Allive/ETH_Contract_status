@@ -1,4 +1,5 @@
 import express from 'express'
+import ethGetter from './ethGetter.js'
 const app = express();
 const port = 9090;
 import sqlite3 from 'sqlite3'
@@ -28,6 +29,20 @@ function convertToFront(array){
     }
     return {deposits:array}
 }
+
+
+
+try{
+    app.get('/API/depositDetails', async (req,res)=>{
+        if(typeof req.query.txn =='undefined')
+            res.send(400)
+        try{
+        res.send(await ethGetter.getDeposit(req.query.txn))
+        }catch(e){
+            res.send(500)
+        }
+    })
+}catch(e){console.log(e)}
 
 try{
     app.get('/API/depositsInfo',  (req,res) => {
