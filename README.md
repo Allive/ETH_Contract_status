@@ -1,5 +1,5 @@
-# ETH_Contract_status
-
+# KEEP-DEPOSIT
+[WEB APP deposit-info.com](https://keep-deposit.com)
 ### INSTALLATION
 ```sh
 $ sudo apt install build-essential
@@ -28,8 +28,30 @@ QTY_TO_GRAB_LAST_DEPOSITS = 20
 $ node --experimental-json-modules index.js
 ```
 
-### DEVELOPERS
+### TESTING
+#### WEB APP
+Open browser
+default port for web app is 80
+You will see cards of deposits this full info about
 
-server.js - simple express app
-index.js - start both ethGetter and express
+#### BACKEND API
+For searching about known deposit's address
+```sh
+${yours_server_address}:9090/API/depositDetails?depositAddress=0xdee603DeE3B638472D7AF560Ea5e076F2ba6583F
+```
+For searching only by transacraction hash
+```sh
+${yours_server_address}:9090/API/depositDetails?txn=0x5901eb10fc96eac584a14036207bd7aa1fe5f1ce426c542eaee942c0105211be
+```
+For list of prepared deposits information
+```sh
+${yours_server_address}:9090/API/depositsInfo
+```
+### DEVELOPING
+
+index.js - starts ethGetter, express backend, flutter web app
 ethGetter.js - main module to get information from web3 and tbtc
+server.js - simple express app
+./www/bin.js - listen 80, 443 for flutter web app
+flutterServer.js - provides express to path of flutter web app
+/public-flutter  - builded web app in flutter
