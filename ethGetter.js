@@ -52,7 +52,7 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, txHashesInDB)
 
     //collect information about token
     let tokenTotalSupply = parseInt(await tBTCtokenContract.methods.totalSupply().call())*0.000000000000000001 
-    if(!isNan(tokenTotalSupply)){
+    if(!isNaN(tokenTotalSupply)){
         db.run(`INSERT INTO allInfo (key,value) VALUES ("TBTCtokenTotalSupply",${tokenTotalSupply})
             ON CONFLICT (key) DO UPDATE SET value=${tokenTotalSupply} where key="TBTCtokenTotalSupply"`)  
     }
@@ -114,8 +114,11 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
         //if confirmations qty not reach needed yet - grab it from electrumX 
         if((nowConfirmations < requiredConfirmations) || nowConfirmations===null || requiredConfirmations===null){
             try{
-                thisDeposit.btcTransactionID = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0].transactionID
-                thisDeposit.nowConfirmations = await BitcoinHelpers.Transaction.checkForConfirmations(thisDeposit.btcTransactionID ,0)
+                thisDeposit.btcTransactionID = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0]
+                if(typeof thisDeposit.btcTransactionID.c !=='undefined'){
+                    thisDeposit.btcTransactionID= thisDeposit.btcTransactionID.btcTransactionID
+                    thisDeposit.nowConfirmations = await BitcoinHelpers.Transaction.checkForConfirmations(thisDeposit.btcTransactionID ,0)
+                }
             }catch(e){
                 console.log(e)
             }

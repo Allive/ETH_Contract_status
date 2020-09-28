@@ -41,7 +41,7 @@ function convertToFront(array){
         array[i].nowConfirmations = parseFloat(array[i].nowConfirmations)
         array[i].timestamp = parseInt(array[i].timestamp)
     }
-    return {deposits:array}
+    return array
 }
 
 app.use((req, res, next) => {
@@ -67,15 +67,29 @@ try{
 try{
     app.get('/API/depositsInfo',  (req,res) => {
 
-        if(typeof req.query.qty =='undefined'){
-            db.all(`SELECT * FROM deposits `,(err,rows)=>{
-                res.send(convertToFront(rows))
-            })
-        }else{
-            let limit = parseInt(req.query.qty)
-            db.all(`SELECT * FROM deposits ORDER BY id DESC LIMIT ${limit}`,(err,rows)=>{
-                res.send(convertToFront(rows))
-            })
+        //First coolect additinal info
+        db.all(`SELECT * FROM allInfo `,(err,rows)=>{
+            let answerObj={}
+            for(let i=0; i<rows.length; i++){
+                answerObj[rows[i].key] = rows[i].value
+            }
+            getSqlDeposits(answerObj)
+
+        })
+
+        function getSqlDeposits(answer){
+            if(typeof req.query.qty =='undefined'){
+                db.all(`SELECT * FROM deposits `,(err,rows)=>{
+                    answer.deposits = convertToFront(rows)
+                    res.send(answer)
+                })
+            }else{
+                let limit = parseInt(req.query.qty)
+                db.all(`SELECT * FROM deposits ORDER BY id DESC LIMIT ${limit}`,(err,rows)=>{
+                    answer.deposits = convertToFront(rows)
+                    res.send(answer)
+                })
+            }
         }
     })
 }catch(e){
