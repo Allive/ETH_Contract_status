@@ -1,5 +1,5 @@
 # KEEP-DEPOSIT
-[WEB APP deposit-info.com](https://keep-deposit.com)
+[WEB APP keep-deposit.com](https://keep-deposit.com)
 ### INSTALLATION
 ```sh
 $ sudo apt install build-essential
