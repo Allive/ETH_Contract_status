@@ -171,6 +171,10 @@ async function connect(){
         console.log('Connected to the deposits database.');
     });
 
+
+    // Making 2 local tables:
+    // for store all deposits
+    // And for all potentially additional info
     db.serialize(function() {
         db.run(`CREATE TABLE IF NOT EXISTS deposits (
             id INTEGER,
@@ -216,6 +220,7 @@ async function connect(){
 
     //creating tbtc factory contract object
     tBTCfactoryContract = new web3.eth.Contract(factoryAbi.abi, web3.utils.toChecksumAddress(tBTCfactoryAddress));
+    //creating tbtc token contract object
     tBTCtokenContract = new web3.eth.Contract(tokenAbi.abi, web3.utils.toChecksumAddress(tTBTCtokenAddress));
 }
 
