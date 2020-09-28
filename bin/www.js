@@ -11,10 +11,13 @@ var credentials = {key: privateKey, cert: certificate};
 
 
 function startServer() {
-    var httpServer = http.createServer(app);
-    var httpsServer = https.createServer(credentials, app);
-    httpServer.listen(80);
-    httpsServer.listen(443);
+    if(typeof credentials.key || typeof credentials.cer =='undefined'){
+        var httpServer = http.createServer(app);
+        httpServer.listen(80);
+    }else{
+        var httpsServer = https.createServer(credentials, app);
+        httpsServer.listen(443);
+    }
  }
 
 

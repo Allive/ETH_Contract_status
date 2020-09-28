@@ -22,12 +22,15 @@ const db = new sqlite3.Database('./database.db', (err) => {
     console.log('Connected to the chinook database.');
   });
 
-function startServer() {
-   var httpServer = http.createServer(app);
-   var httpsServer = https.createServer(credentials, app);
-   httpServer.listen(9090);
-   httpsServer.listen(9443);
-}
+  function startServer() {
+    if(typeof credentials.key || typeof credentials.cer =='undefined'){
+        var httpServer = http.createServer(app);
+        httpServer.listen(9090);
+    }else{
+        var httpsServer = https.createServer(credentials, app);
+        httpsServer.listen(9443);
+    }
+ }
 
 
 
