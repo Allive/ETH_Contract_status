@@ -107,7 +107,9 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
             try{
                 thisDeposit.btcTransactionID = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0].transactionID
                 thisDeposit.nowConfirmations = await BitcoinHelpers.Transaction.checkForConfirmations(thisDeposit.btcTransactionID ,0)
-            }catch(e){}
+            }catch(e){
+                console.log(e)
+            }
         }
         //Only for new deposits
         if(depositAddress === null){
@@ -154,7 +156,7 @@ async function connect(){
         if (err) {
         console.error(err.message);
         }
-        console.log('Connected to the chinook database.');
+        console.log('Connected to the deposits database.');
     });
 
     db.serialize(function() {
@@ -251,7 +253,6 @@ async function main(){
 }
 
 function startAll(){ 
-    console.log(process.env)
     try{
         main()
     }catch(e){
