@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import TBTC  from '@keep-network/tbtc.js/src/TBTC.js';
 import factoryAbi from '@keep-network/tbtc/artifacts/DepositFactory.json'
+import tokenAbi from '@keep-network/tbtc/artifacts/TBTCToken.json'
 import EthereumHelpers from '@keep-network/tbtc.js/src/EthereumHelpers.js'
 import BitcoinHelpers from '@keep-network/tbtc.js/src/BitcoinHelpers.js'
 import sqlite3 from 'sqlite3'
@@ -12,7 +13,7 @@ let tbtc
 let web3
 let db
 let tBTCfactoryContract ={}
-
+let tBTCtokenContract ={}
 const MS_TO_GRAB_ALL_DATA = typeof process.env.MS_TO_GRAB_ALL_DATA === 'undefined' ? 3600000 : process.env.MS_TO_GRAB_ALL_DATA
 const MS_TO_GRAB_LAST_DEPOSITS = typeof process.env.MS_TO_GRAB_LAST_DEPOSITS === 'undefined' ? 30000 : process.env.MS_TO_GRAB_LAST_DEPOSITS
 const QTY_TO_GRAB_LAST_DEPOSITS = typeof process.env.QTY_TO_GRAB_LAST_DEPOSITS === 'undefined' ? 20 : process.env.QTY_TO_GRAB_LAST_DEPOSITS
@@ -46,6 +47,14 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, txHashesInDB)
             await getDeposit(events[i].transactionHash, null)
         else
             await getDeposit(null, txHashesInDB[events[i].transactionHash].depositAddress, txHashesInDB[events[i].transactionHash].nowConfirmations, txHashesInDB[events[i].transactionHash].requiredConfirmations)
+    }
+
+
+    //collect information about token
+    let tokenTotalSupply = parseInt(await tBTCtokenContract.methods.totalSupply().call())*0.000000000000000001 
+    if(!isNan(tokenTotalSupply)){
+        db.run(`INSERT INTO allInfo (key,value) VALUES ("TBTCtokenTotalSupply",${tokenTotalSupply})
+            ON CONFLICT (key) DO UPDATE SET value=${tokenTotalSupply} where key="TBTCtokenTotalSupply"`)  
     }
 }
 
@@ -175,6 +184,13 @@ async function connect(){
             )`);
     })
 
+    db.serialize(function() {
+        db.run(`CREATE TABLE IF NOT EXISTS allInfo (
+                key TEXT PRIMARY KEY,
+                value TEXT                             
+            )`);
+    })
+
 
     //establishing connection to mainnet eth with web3 
     web3 = await new Web3(process.env.WEB3_PROVIDER)
@@ -193,9 +209,11 @@ async function connect(){
     
 
     const tBTCfactoryAddress = '0x87EFFeF56C7fF13E2463b5d4dCE81bE2340FAf8b'
+    const tTBTCtokenAddress = '0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa'
+
     //creating tbtc factory contract object
     tBTCfactoryContract = new web3.eth.Contract(factoryAbi.abi, web3.utils.toChecksumAddress(tBTCfactoryAddress));
-
+    tBTCtokenContract = new web3.eth.Contract(tokenAbi.abi, web3.utils.toChecksumAddress(tTBTCtokenAddress));
 }
 
 async function main(){
