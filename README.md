@@ -46,7 +46,7 @@ For searching only by transacraction hash (will return full known info about the
 ```sh
 ${yours_server_address}:9090/API/depositDetails?txn=0x5901eb10fc96eac584a14036207bd7aa1fe5f1ce426c542eaee942c0105211be
 ```
-For list of prepared deposits information (time of delay about these list can be configured in [.env](#####timings)
+For list of prepared deposits information (time of delay about these list can be configured in [.env](#timings)
 ```sh
 ${yours_server_address}:9090/API/depositsInfo
 ```
