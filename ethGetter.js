@@ -2,8 +2,10 @@ import Web3 from 'web3';
 import TBTC  from '@keep-network/tbtc.js/src/TBTC.js';
 import factoryAbi from '@keep-network/tbtc/artifacts/DepositFactory.json'
 import EthereumHelpers from '@keep-network/tbtc.js/src/EthereumHelpers.js'
+import BitcoinHelpers from '@keep-network/tbtc.js/src/BitcoinHelpers.js'
 import sqlite3 from 'sqlite3'
 import dotenv from 'dotenv'
+
 dotenv.config()
 
 let tbtc
@@ -43,11 +45,11 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, txHashesInDB)
         if(typeof txHashesInDB[events[i].transactionHash] === 'undefined' || typeof txHashesInDB[events[i].transactionHash].depositAddress === 'undefined')
             await getDeposit(events[i].transactionHash, null)
         else
-            await getDeposit(null, txHashesInDB[events[i].transactionHash].depositAddress)
+            await getDeposit(null, txHashesInDB[events[i].transactionHash].depositAddress, txHashesInDB[events[i].transactionHash].nowConfirmations, txHashesInDB[events[i].transactionHash].requiredConfirmations)
     }
 }
 
-async function getDeposit(txHash=null, depositAddress = null){
+async function getDeposit(txHash=null, depositAddress = null, nowConfirmations = null, requiredConfirmations= null){
     try{
         //prepare output object
         let thisDeposit = {}
@@ -82,6 +84,7 @@ async function getDeposit(txHash=null, depositAddress = null){
             }
             //End mismatch
 
+            
             //from events of transaction getting deposit address by factoryContract abi
             thisDeposit.depositAddress = (await EthereumHelpers.readEventFromTransaction(web3,transactionInfo,tBTCfactoryContract,'DepositCloneCreated'))[0]
         }
@@ -93,21 +96,23 @@ async function getDeposit(txHash=null, depositAddress = null){
             console.log(e)
             return
         }
+        thisDeposit.bitcoinAddress = await deposit.bitcoinAddress
 
         //getting state of contract instance
         thisDeposit.state = findThisState(deposit.factory.State, await deposit.getCurrentState())
 
+
+        //if confirmations qty not reach needed yet - grab it from electrumX 
+        if(nowConfirmations < requiredConfirmations){
+            try{
+                thisDeposit.btcTransactionID = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0].transactionID
+                thisDeposit.nowConfirmations = await BitcoinHelpers.Transaction.checkForConfirmations(thisDeposit.btcTransactionID ,0)
+            }catch(e){}
+        }
         //Only for new deposits
         if(depositAddress === null){
             thisDeposit.keepAddress = deposit.keepContract._address
-
-            //unapproved function to find x/6 confirmations passed
-            try{
-                thisDeposit.nowConfirmations = await deposit.fundingConfirmations
-            }catch(e){
-
-            }
-
+            
             //ts creating deposit at block of transaction
             thisDeposit.timestamp = (await web3.eth.getBlock(transactionInfo.blockNumber)).timestamp
 
@@ -128,10 +133,14 @@ async function getDeposit(txHash=null, depositAddress = null){
 
 async function getEvents(shiftSearching) {
     try{
-        db.all(`SELECT depositAddress,txHash FROM deposits `, async (err,rows)=>{
+        db.all(`SELECT depositAddress,txHash,nowConfirmations,requiredConfirmations FROM deposits `, async (err,rows)=>{
             let txHashes = {}
             for(let i=0; i< rows.length;i++){
-                txHashes[rows[i].txHash] = {depositAddress:rows[i].depositAddress}
+                txHashes[rows[i].txHash] = {
+                    depositAddress:rows[i].depositAddress,
+                    requiredConfirmations:rows[i].requiredConfirmations,
+                    nowConfirmations:rows[i].nowConfirmations,
+                }
             }
             await getAllEventsInTBTCtoken(shiftSearching, tBTCfactoryContract, txHashes)
         })
@@ -152,6 +161,8 @@ async function connect(){
         db.run(`CREATE TABLE IF NOT EXISTS deposits (
             id INTEGER,
             depositAddress TEXT PRIMARY KEY,
+            bitcoinAddress TEXT,
+            btcTransactionID TEXT,
             txHash TEXT,
             keepAddress TEXT,
             requiredConfirmations TEXT,
@@ -171,21 +182,14 @@ async function connect(){
         web3: web3,
         bitcoinNetwork: "main",
         electrum: {
-            "testnet": {
-                "server": "electrumx-server.test.tbtc.network",
-                "port": 50002,
-                "protocol": "ssl"
-            },
-            "testnetWS": {
-                "server": "electrumx-server.test.tbtc.network",
-                "port": 50003,
-                "protocol": "ws"
-            }
+            server: process.env.ELECTRUM_SERVER,
+            port:process.env.ELECTRUM_PORT,
+            protocol: process.env.ELECTRUM_PROTOCOL
+
         },
     })
     
 
-    //factory of contracts address
     const tBTCfactoryAddress = '0x87EFFeF56C7fF13E2463b5d4dCE81bE2340FAf8b'
     //creating tbtc factory contract object
     tBTCfactoryContract = new web3.eth.Contract(factoryAbi.abi, web3.utils.toChecksumAddress(tBTCfactoryAddress));

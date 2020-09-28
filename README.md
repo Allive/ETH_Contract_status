@@ -14,6 +14,14 @@ create constant with your address to mainnet web3 provider
 ``` sh
 WEB3_PROVIDER=https://mainnet.infura.io/v3/4d4d0f30284345bd9867a919f23c2723
 ```
+##### electrumx
+Provide server information for connecting to one of electrumX servers (besides tou cannot get btcAddress and qty of confirmations)
+```sh
+ELECTRUM_SERVER= ip.address.com
+ELECTRUM_PORT=5002
+ELECTRUM_PROTOCOL=ssl|tcp
+```
+
 ##### ssl
 if you want to privide ssl into back and web app - add these lines into .env
 ``` sh
