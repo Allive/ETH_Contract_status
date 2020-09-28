@@ -60,6 +60,10 @@ For list of prepared deposits information (time of delay about these list can be
 ```sh
 ${yours_server_address}:9090/API/depositsInfo
 ```
+optional query argument "qty" will limit last deposits
+```sh
+${yours_server_address}:9090/API/depositsInfo?qty=10
+```
 ### DEVELOPING
 
 ```
