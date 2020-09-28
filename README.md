@@ -1,24 +1,24 @@
-#KEEP-DEPOSIT
+# KEEP-DEPOSIT
 [WEB APP keep-deposit.com](https://keep-deposit.com)
-###INSTALLATION
+### INSTALLATION
 ```sh
 $ sudo apt install build-essential
 $ npm install
 ```
 
 make if not exists .env file in root of project
-#####web3
+##### web3
 create constant with your address to mainnet web3 provider
 ``` sh
 WEB3_PROVIDER=https://mainnet.infura.io/v3/4d4d0f30284345bd9867a919f23c2723
 ```
-#####ssl
+##### ssl
 if you want to privide ssl into back and web app - add these lines into .env
 ``` sh
 PRIVATE_KEY_SSL = ${absolute_path_to_key}
 CERT_SSL = ${absolute_path_to_cert}
 ```
-#####timings
+##### timings
 if you want to adjust timings and qty refresh data add these ones. Time in millisecons
 ```sh
 MS_TO_GRAB_ALL_DATA = 600000
@@ -26,18 +26,18 @@ MS_TO_GRAB_LAST_DEPOSITS = 40000
 QTY_TO_GRAB_LAST_DEPOSITS = 20
 ```
 
-###START
+### START
 ``` sh
 $ node --experimental-json-modules index.js
 ```
 
-###TESTING
-####WEB APP
+### TESTING
+#### WEB APP
 Open browser
 default port for web app is 80
 You will see cards of deposits this full info about
 
-####BACKEND API
+#### BACKEND API
 For searching about known deposit address (will return only current status and tansaction hash)
 ```sh
 ${yours_server_address}:9090/API/depositDetails?depositAddress=0xdee603DeE3B638472D7AF560Ea5e076F2ba6583F
@@ -50,7 +50,7 @@ For list of prepared deposits information (time of delay about these list can be
 ```sh
 ${yours_server_address}:9090/API/depositsInfo
 ```
-###DEVELOPING
+### DEVELOPING
 
 ```
 index.js            // Start ethGetter, express backend, flutter web app
