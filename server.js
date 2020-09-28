@@ -71,7 +71,7 @@ try{
         db.all(`SELECT * FROM allInfo `,(err,rows)=>{
             let answerObj={}
             for(let i=0; i<rows.length; i++){
-                answerObj[rows[i].key] = rows[i].value
+                answerObj[rows[i].key] = parseFloat(rows[i].value)
             }
             getSqlDeposits(answerObj)
 
