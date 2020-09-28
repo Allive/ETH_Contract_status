@@ -45,10 +45,13 @@ app.use((req, res, next) => {
 
 try{
     app.get('/API/depositDetails', async (req,res)=>{
-        if(typeof req.query.txn =='undefined')
+        if(typeof req.query.txn === 'undefined' && typeof req.query.depositAddress === 'undefined' )
             res.send(400)
         try{
-        res.send(await ethGetter.getDeposit(req.query.txn))
+            if(typeof req.query.depositAddress === 'undefined')
+                res.send(await ethGetter.getDeposit(req.query.txn, null))
+            else
+                res.send(await ethGetter.getDeposit(null, req.query.depositAddress))
         }catch(e){
             res.send(500)
         }
