@@ -49866,7 +49866,7 @@ m.jU$=new B.Is(H.d([],t.r7))
 p=B.ac1(null,null,null,null,null,null,null,5000,null,null,null,null,null)
 p.a="GET"
 s=3
-return P.au(m.EW(0,"http://keep-deposit.com:9090/API/depositsInfo",null,null,p,null,t.el),$async$mX)
+return P.au(m.EW(0,"https://keep-deposit.com:9443/API/depositsInfo",null,null,p,null,t.el),$async$mX)
 case 3:o=b
 n=J.hE(0,t.fc)
 if(o.d===200){J.iF(t.a7.a(J.bb(o.a,"deposits")),new V.JO(n))
