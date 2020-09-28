@@ -52,7 +52,7 @@ ${yours_server_address}:9090/API/depositsInfo
 ```
 index.js            // Start ethGetter, express backend, flutter web app
 ethGetter.js        // Main module to get information from web3 and tbtc
-server.js           // Simple express app
+server.js           // Simple express app for backend API
 ./www/bin.js        // Listen 80, 443 for flutter web app
 flutterServer.js    // Provides express to path of flutter web app
 /public-flutter     // Builded web app in flutter
