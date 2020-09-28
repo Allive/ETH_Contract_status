@@ -103,7 +103,7 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
 
 
         //if confirmations qty not reach needed yet - grab it from electrumX 
-        if(nowConfirmations < requiredConfirmations){
+        if((nowConfirmations < requiredConfirmations) || nowConfirmations===null || requiredConfirmations===null){
             try{
                 thisDeposit.btcTransactionID = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0].transactionID
                 thisDeposit.nowConfirmations = await BitcoinHelpers.Transaction.checkForConfirmations(thisDeposit.btcTransactionID ,0)
