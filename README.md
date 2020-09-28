@@ -23,7 +23,7 @@ MS_TO_GRAB_LAST_DEPOSITS = 40000
 QTY_TO_GRAB_LAST_DEPOSITS = 20
 ```
 
-### Start
+### START
 ``` sh
 $ node --experimental-json-modules index.js
 ```
