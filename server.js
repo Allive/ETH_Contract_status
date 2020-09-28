@@ -4,9 +4,9 @@ import fs from 'fs'
 import http from 'http'
 import https from 'https'
 try{
-    var privateKey  = fs.readFileSync('/etc/letsencrypt/live/keep-deposit.com/privkey.pem', 'utf8');
-    var certificate = fs.readFileSync('/etc/letsencrypt/live/keep-deposit.com/cert.pem', 'utf8');
-}catch(e){console.log(e)}
+    var privateKey  = fs.readFileSync(process.env.PRIVATE_KEY_SSL, 'utf8');
+    var certificate = fs.readFileSync(process.env.CERT_SSL, 'utf8');
+}catch(e){}
 var credentials = {key: privateKey, cert: certificate};
 const app = express();
 import sqlite3 from 'sqlite3'
