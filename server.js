@@ -23,13 +23,13 @@ const db = new sqlite3.Database('./database.db', (err) => {
   });
 
   function startServer() {
-    if(typeof credentials.key || typeof credentials.cer =='undefined'){
+    //if(typeof credentials.key || typeof credentials.cer =='undefined'){
         var httpServer = http.createServer(app);
         httpServer.listen(9090);
-    }else{
+    //}else{
         var httpsServer = https.createServer(credentials, app);
         httpsServer.listen(9443);
-    }
+   // }
  }
 
 
