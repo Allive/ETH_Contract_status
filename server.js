@@ -3,6 +3,9 @@ import ethGetter from './ethGetter.js'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
+import dotenv from 'dotenv'
+dotenv.config()
+
 try{
     var privateKey  = fs.readFileSync(process.env.PRIVATE_KEY_SSL, 'utf8');
     var certificate = fs.readFileSync(process.env.CERT_SSL, 'utf8');

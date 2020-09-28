@@ -1,10 +1,11 @@
 
+import dotenv from 'dotenv'
+dotenv.config()
+
 import ETHgetter from './ethGetter.js'
 import expressServer from './server.js'
 import webServer from './bin/www.js'
-import dotenv from 'dotenv'
 
-dotenv.config()
 
 
 function startETHgetter(){ 

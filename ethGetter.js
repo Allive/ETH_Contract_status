@@ -3,11 +3,19 @@ import TBTC  from '@keep-network/tbtc.js/src/TBTC.js';
 import factoryAbi from '@keep-network/tbtc/artifacts/DepositFactory.json'
 import EthereumHelpers from '@keep-network/tbtc.js/src/EthereumHelpers.js'
 import sqlite3 from 'sqlite3'
+import dotenv from 'dotenv'
+dotenv.config()
 
 let tbtc
 let web3
 let db
 let tBTCfactoryContract ={}
+
+const MS_TO_GRAB_ALL_DATA = typeof process.env.MS_TO_GRAB_ALL_DATA === 'undefined' ? 3600000 : process.env.MS_TO_GRAB_ALL_DATA
+const MS_TO_GRAB_LAST_DEPOSITS = typeof process.env.MS_TO_GRAB_LAST_DEPOSITS === 'undefined' ? 30000 : process.env.MS_TO_GRAB_LAST_DEPOSITS
+const QTY_TO_GRAB_LAST_DEPOSITS = typeof process.env.QTY_TO_GRAB_LAST_DEPOSITS === 'undefined' ? 20 : process.env.QTY_TO_GRAB_LAST_DEPOSITS
+
+
 
 function findThisState(configStates, nowStateInt){
     for(let state in configStates){
@@ -38,7 +46,6 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, txHashesInDB)
             await getDeposit(null, txHashesInDB[events[i].transactionHash].depositAddress)
     }
 }
-
 
 async function getDeposit(txHash=null, depositAddress = null){
     try{
@@ -118,7 +125,6 @@ async function getDeposit(txHash=null, depositAddress = null){
         return thisDeposit
     }catch(e){console.log(e)}
 }
-
 
 async function getEvents(shiftSearching) {
     try{
@@ -224,24 +230,24 @@ async function main(){
                 .catch(error => {
                     console.log(error)
                 })
-            }, 3600000)
+            }, MS_TO_GRAB_ALL_DATA)
         }
     });
     
     
     //every ~30seconds grab last 20 deposits
     function fewLastEvents(){
-        getEvents(20).then(() => {
-            console.log("Last 20 done!")
+        getEvents(QTY_TO_GRAB_LAST_DEPOSITS).then(() => {
+            console.log(`Last ${QTY_TO_GRAB_LAST_DEPOSITS} done!`)
 
-            setTimeout(fewLastEvents,30000)
+            setTimeout(fewLastEvents,MS_TO_GRAB_LAST_DEPOSITS)
         })
     }
     
 }
 
-function startAll(){
-    
+function startAll(){ 
+    console.log(process.env)
     try{
         main()
     }catch(e){
@@ -249,7 +255,6 @@ function startAll(){
         startAll()
     }
 }
-
 
 export default {
     startAll,
