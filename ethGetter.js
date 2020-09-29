@@ -123,6 +123,8 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
             }catch(e){
                 console.log(e)
             }
+        }else{
+            thisDeposit.nowConfirmations = nowConfirmations
         }
         //Only for new deposits
         if(depositAddress === null){
@@ -141,7 +143,7 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
     
         //insert or update status of deposit
         db.run(`INSERT INTO deposits ("id",${Object.keys(thisDeposit)}) values ((SELECT IFNULL(MAX(id), 0) + 1 FROM deposits), ${valuesToInsert})
-            ON CONFLICT(depositAddress) DO UPDATE SET state="${thisDeposit.state}" where depositAddress="${thisDeposit.depositAddress}"`)
+            ON CONFLICT(depositAddress) DO UPDATE SET state="${thisDeposit.state}", nowConfirmations="${thisDeposit.nowConfirmations}" where depositAddress="${thisDeposit.depositAddress}"`)
         return thisDeposit
     }catch(e){console.log(e)}
 }
