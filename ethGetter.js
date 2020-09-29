@@ -62,7 +62,6 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
     try{
         //prepare output object
         let thisDeposit = {}
-
         if(txHash !== null)
             thisDeposit.txHash = txHash
         else if(depositAddress !== null)
@@ -126,7 +125,7 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
         }else{
             thisDeposit.nowConfirmations = nowConfirmations
         }
-        if(thisDeposit.nowConfirmations == null || typeof thisDeposit.nowConfirmations == 'undefined'){
+        if(thisDeposit.nowConfirmations == null || typeof thisDeposit.nowConfirmations == 'undefined' || thisDeposit.nowConfirmations == 'null' ){
             if(thisDeposit.state === "AWAITING_BTC_FUNDING_PROOF")
                 thisDeposit.nowConfirmations = 0
             else if(thisDeposit.state === "ACTIVE" || thisDeposit.state === "REDEEMED" || thisDeposit.state === "AWAITING_WITHDRAWAL_PROOF")
