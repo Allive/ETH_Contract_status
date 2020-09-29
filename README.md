@@ -6,6 +6,25 @@
 	</a>
 </p>
 
+### INFO
+#### Web, Mobile APP 
+* Realtime deposits view
+* Fast and smooth view of deposits cards
+* Copy all needed hashes for next searching
+* Check transaction at etherscan.io
+* Search for any of hashes that belongs to deposit
+
+#### Backend API
+* HTTP API
+* Get storaged deposits
+* Get in query deposit or transaction you want to know about
+* Configure your own web3 provider
+* Configure your own electrum server
+* Attach https in 2 lines of config
+
+
+
+
 ### INSTALLATION
 ```sh
 $ sudo apt install build-essential
