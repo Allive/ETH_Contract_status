@@ -116,7 +116,7 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
             try{
                 let gettingTransaction = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0]
                 if(typeof gettingTransaction.transactionID !=='undefined'){
-                    thisDeposit.btcTransactionID= gettingTransaction.btcTransactionID
+                    thisDeposit.btcTransactionID= gettingTransaction.transactionID
                     thisDeposit.nowConfirmations = await BitcoinHelpers.Transaction.checkForConfirmations(thisDeposit.btcTransactionID ,0)
                 }
 
