@@ -61,8 +61,8 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, txHashesInDB)
 
 async function getDeposit(txHash=null, depositAddress = null, nowConfirmations = null, requiredConfirmations= null, knownStatus=null, isBackApi=false){
     //If we know full info about deposit and this is goes from internal query - ignore it
-    if( (knownStatus == 'REDEEMED' || knownStatus == 'ACTIVE') && (parseInt(nowConfirmations)>parseInt(requiredConfirmations)) && isBackApi === true)
-        return
+    //if( (knownStatus == 'REDEEMED' || knownStatus == 'ACTIVE') && (parseInt(nowConfirmations)>parseInt(requiredConfirmations)) && isBackApi === true)
+     //   return
 
     try{
         //prepare output object
