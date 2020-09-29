@@ -19,7 +19,7 @@ create constant with your address to mainnet web3 provider
 WEB3_PROVIDER=https://mainnet.infura.io/v3/4d4d0f30284345bd9867a919f23c2723
 ```
 ##### electrumx
-Provide server information for connecting to one of electrumX servers (besides tou cannot get btcAddress and qty of confirmations)
+Provide server information for connecting to one of electrumX servers (otherwise you cannot get btc Address and qty of confirmations)
 ```sh
 ELECTRUM_SERVER= ip.address.com
 ELECTRUM_PORT=5002
@@ -27,13 +27,13 @@ ELECTRUM_PROTOCOL=ssl|tcp
 ```
 
 ##### ssl
-if you want to privide ssl into back and web app - add these lines into .env
+if you want to provide ssl into back and web app - add these lines into .env
 ``` sh
 PRIVATE_KEY_SSL = ${absolute_path_to_key}
 CERT_SSL = ${absolute_path_to_cert}
 ```
 ##### timings
-if you want to adjust timings and qty refresh data add these ones. Time in millisecons
+if you want to adjust timings and qty refresh data add these ones. Time in milliseconds
 ```sh
 MS_TO_GRAB_ALL_DATA = 600000
 MS_TO_GRAB_LAST_DEPOSITS = 40000
@@ -48,7 +48,7 @@ $ node --experimental-json-modules index.js
 ### TESTING
 #### WEB APP
 Open browser
-default port for web app is 80
+default port for web app is 90
 You will see cards of deposits this full info about
 
 #### BACKEND API
@@ -74,7 +74,9 @@ ${yours_server_address}:9090/API/depositsInfo?qty=10
 index.js            // Start ethGetter, express backend, flutter web app
 ethGetter.js        // Main module to get information from web3 and tbtc
 server.js           // Simple express app for backend API
-./www/bin.js        // Listen 80, 443 for flutter web app
+./www/bin.js        // Listens 90, 443 for flutter web app
 flutterServer.js    // Provides express to path of flutter web app
-/public-flutter     // Builded web app in flutter
+/public-flutter     // Build of web app in flutter
+
+
 ```
