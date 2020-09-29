@@ -112,7 +112,7 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
 
 
         //if confirmations qty not reach needed yet - grab it from electrumX 
-        if((parseInt(nowConfirmations) < parseInt(requiredConfirmations)) || nowConfirmations===null || requiredConfirmations===null){
+        if((parseInt(nowConfirmations) < parseInt(requiredConfirmations)) || nowConfirmations == null || requiredConfirmations == null){
             try{
                 let gettingTransaction = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0]
                 if(typeof gettingTransaction.transactionID !=='undefined'){
@@ -126,7 +126,7 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
         }else{
             thisDeposit.nowConfirmations = nowConfirmations
         }
-        if(thisDeposit.nowConfirmations == null || typeof thisDeposit.nowConfirmations =='undefined' || thisDeposit.nowConfirmations.toString == 'null'){
+        if(thisDeposit.nowConfirmations == null || typeof thisDeposit.nowConfirmations == 'undefined'){
             if(thisDeposit.state === "AWAITING_BTC_FUNDING_PROOF")
                 thisDeposit.nowConfirmations = 0
             else if(thisDeposit.state === "ACTIVE" || thisDeposit.state === "REDEEMED" || thisDeposit.state === "AWAITING_WITHDRAWAL_PROOF")
