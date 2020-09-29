@@ -46,7 +46,7 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, txHashesInDB)
         if(typeof txHashesInDB[events[i].transactionHash] === 'undefined' || typeof txHashesInDB[events[i].transactionHash].depositAddress === 'undefined')
             await getDeposit(events[i].transactionHash, null)
         else
-            await getDeposit(null, txHashesInDB[events[i].transactionHash].depositAddress, txHashesInDB[events[i].transactionHash].nowConfirmations, txHashesInDB[events[i].transactionHash].requiredConfirmations)
+            await getDeposit(null, txHashesInDB[events[i].transactionHash].depositAddress, txHashesInDB[events[i].transactionHash].nowConfirmations, txHashesInDB[events[i].transactionHash].requiredConfirmations, txHashesInDB[events[i].transactionHash].knownStatus, true)
     }
 
 
@@ -56,9 +56,14 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, txHashesInDB)
         db.run(`INSERT INTO allInfo (key,value) VALUES ("TBTCtokenTotalSupply",${tokenTotalSupply})
             ON CONFLICT (key) DO UPDATE SET value=${tokenTotalSupply} where key="TBTCtokenTotalSupply"`)  
     }
+    return
 }
 
-async function getDeposit(txHash=null, depositAddress = null, nowConfirmations = null, requiredConfirmations= null){
+async function getDeposit(txHash=null, depositAddress = null, nowConfirmations = null, requiredConfirmations= null, knownStatus=null, isBackApi=false){
+    //If we know full info about deposit and this is goes from internal query - ignore it
+    if(knownStatus == 'REDEEMED' && (parseInt(nowConfirmations)>parseInt(requiredConfirmations)) && isBackApi === true)
+        return
+
     try{
         //prepare output object
         let thisDeposit = {}
@@ -155,16 +160,18 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
 
 async function getEvents(shiftSearching) {
     try{
-        db.all(`SELECT depositAddress,txHash,nowConfirmations,requiredConfirmations FROM deposits `, async (err,rows)=>{
+        db.all(`SELECT depositAddress,txHash,nowConfirmations,requiredConfirmations,state FROM deposits`, async (err,rows)=>{
             let txHashes = {}
             for(let i=0; i< rows.length;i++){
                 txHashes[rows[i].txHash] = {
                     depositAddress:rows[i].depositAddress,
                     requiredConfirmations:rows[i].requiredConfirmations,
                     nowConfirmations:rows[i].nowConfirmations,
+                    knownStatus:rows[i].state,
                 }
             }
             await getAllEventsInTBTCtoken(shiftSearching, tBTCfactoryContract, txHashes)
+            shiftSearching
         })
         
     }catch(e){console.log(e)}
