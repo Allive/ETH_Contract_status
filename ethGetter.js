@@ -126,11 +126,11 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
         }else{
             thisDeposit.nowConfirmations = nowConfirmations
         }
-        if(thisDeposit.nowConfirmations === null){
+        if(thisDeposit.nowConfirmations === null || typeof thisDeposit.nowConfirmations =='undefined'){
             if(thisDeposit.state === "AWAITING_BTC_FUNDING_PROOF")
                 thisDeposit.nowConfirmations = 0
-            else if(thisDeposit.state === "ACTIVE" || thisDeposit.state === "REDEEMED")
-                thisDeposit.nowConfirmations = parseInt(requiredConfirmations)
+            else if(thisDeposit.state === "ACTIVE" || thisDeposit.state === "REDEEMED" || thisDeposit.state === "AWAITING_WITHDRAWAL_PROOF")
+                thisDeposit.nowConfirmations = requiredConfirmations != null ? parseInt(requiredConfirmations) : 6
         } 
         //Only for new deposits
         if(depositAddress === null){
