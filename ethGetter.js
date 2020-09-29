@@ -115,10 +115,12 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
         if((nowConfirmations < requiredConfirmations) || nowConfirmations===null || requiredConfirmations===null){
             try{
                 thisDeposit.btcTransactionID = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0]
-                if(typeof thisDeposit.btcTransactionID.c !=='undefined'){
+                if(typeof thisDeposit.btcTransactionID.transactionID !=='undefined'){
                     thisDeposit.btcTransactionID= thisDeposit.btcTransactionID.btcTransactionID
                     thisDeposit.nowConfirmations = await BitcoinHelpers.Transaction.checkForConfirmations(thisDeposit.btcTransactionID ,0)
-                }
+                }else
+                    thisDeposit.btcTransactionID=null
+
             }catch(e){
                 console.log(e)
             }
