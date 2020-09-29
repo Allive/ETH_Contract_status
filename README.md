@@ -1,6 +1,6 @@
 # KEEP-DEPOSIT
 
-[![keep-deposit.com](https://i.ibb.co/syCbwF2/keep-deposit.png "keep-deposit.com")](https://keep-deposit.com "keep-deposit.com")
+[![keep-deposit.com](https://i.ibb.co/0GpR26h/github.png "keep-deposit.com")](https://keep-deposit.com "keep-deposit.com")
 
 ### INSTALLATION
 ```sh
