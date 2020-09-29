@@ -96,6 +96,26 @@ try{
     console.log(e)
 }
 
+
+
+
+try{
+    app.get('/API/tbtcGeneralInfo',  (req,res) => {
+
+        //Coolect additinal info
+        db.all(`SELECT * FROM allInfo `,(err,rows)=>{
+            let answerObj={}
+            for(let i=0; i<rows.length; i++){
+                answerObj[rows[i].key] = parseFloat(rows[i].value)
+            }
+            res.send(answerObj)
+
+        })
+    })
+}catch(e){
+    console.log(e)
+}
+
 export default {
     startServer
 }

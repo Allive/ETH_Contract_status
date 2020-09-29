@@ -21,7 +21,7 @@
 * Configure your own web3 provider
 * Configure your own electrum server
 * Attach https in 2 lines of config
-
+* Get all known by backend info about token
 
 
 
@@ -86,6 +86,11 @@ ${yours_server_address}:9090/API/depositsInfo
 optional query argument "qty" will limit last deposits
 ```sh
 ${yours_server_address}:9090/API/depositsInfo?qty=10
+```
+
+Get all known by backend info about token
+```sh
+${yours_server_address}:9090/API/tbtcGeneralInfo
 ```
 ### DEVELOPING
 
