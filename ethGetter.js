@@ -58,11 +58,11 @@ async function getAllEventsInTBTCtoken(shiftGetting, tBTCcontract, txHashesInDB)
     }
     return
 }
-
+ 
 async function getDeposit(txHash=null, depositAddress = null, nowConfirmations = null, requiredConfirmations= null, knownStatus=null, isBackApi=false){
     //If we know full info about deposit and this is goes from internal query - ignore it
-    //if( (knownStatus == 'REDEEMED' || knownStatus == 'ACTIVE') && (parseInt(nowConfirmations)>parseInt(requiredConfirmations)) && isBackApi === true)
-     //   return
+    if( (knownStatus == 'REDEEMED' || knownStatus == 'ACTIVE') && (parseInt(nowConfirmations)>parseInt(requiredConfirmations)) && isBackApi === true)
+        return
 
     try{
         //prepare output object
@@ -116,7 +116,7 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
 
 
         //if confirmations qty not reach needed yet - grab it from electrumX 
-        //if((parseInt(nowConfirmations) < parseInt(requiredConfirmations)) || nowConfirmations == null || requiredConfirmations == null || requiredConfirmations == 'null' || nowConfirmations == 'null'){
+        if((parseInt(nowConfirmations) < parseInt(requiredConfirmations)) || nowConfirmations == null || requiredConfirmations == null || requiredConfirmations == 'null' || nowConfirmations == 'null'){
             try{
                 let gettingTransaction = (await BitcoinHelpers.Transaction.findAllUnspent(thisDeposit.bitcoinAddress))[0]
                 if(typeof gettingTransaction.transactionID !=='undefined'){
@@ -127,9 +127,9 @@ async function getDeposit(txHash=null, depositAddress = null, nowConfirmations =
             }catch(e){
                 console.log(e)
             }
-       // }else{
-       //     thisDeposit.nowConfirmations = nowConfirmations
-       // }
+        }else{
+            thisDeposit.nowConfirmations = nowConfirmations
+        }
         if(thisDeposit.nowConfirmations == null || typeof thisDeposit.nowConfirmations == 'undefined' || thisDeposit.nowConfirmations == 'null' ){
             if(thisDeposit.state === "AWAITING_BTC_FUNDING_PROOF")
                 thisDeposit.nowConfirmations = 0
