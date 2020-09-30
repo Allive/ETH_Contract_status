@@ -6,6 +6,17 @@
 	</a>
 </p>
 
+									
+### PLANS
+I will wait for any feedback to improve this potential platform 
+The next steps in my opinion are:
+1. Publish mobile app (80% done)
+2. New tab for any tbtc transaction
+3. Integration with metamask with "profile page" for listing maximum possible operations in your wallets
+4. More open API for improving other contribution development  
+5. Something else that you email me or as an issue on this repo...
+
+
 ### INFO
 #### Web, Mobile APP 
 * Realtime deposits view
