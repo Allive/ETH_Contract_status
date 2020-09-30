@@ -15,6 +15,7 @@ The next steps in my opinion are:
 3. Integration with metamask with "profile page" for listing maximum possible operations in your wallets
 4. More open API for improving other contribution development  
 5. Something else that you email me or as an issue on this repo...
+___
 
 
 ### INFO
@@ -24,6 +25,8 @@ The next steps in my opinion are:
 * Copy all needed hashes for next searching
 * Check transaction at etherscan.io
 * Search for any of hashes that belongs to deposit
+___
+
 
 #### Backend API
 * HTTP API
@@ -33,7 +36,7 @@ The next steps in my opinion are:
 * Configure your own electrum server
 * Attach https in 2 lines of config
 * Get all known by backend info about token
-
+___
 
 
 ### INSTALLATION
@@ -69,11 +72,15 @@ MS_TO_GRAB_ALL_DATA = 600000
 MS_TO_GRAB_LAST_DEPOSITS = 40000
 QTY_TO_GRAB_LAST_DEPOSITS = 20
 ```
+___
+
 
 ### START
 ``` sh
 $ node --experimental-json-modules index.js
 ```
+___
+
 
 ### TESTING
 #### WEB APP
@@ -103,6 +110,9 @@ Get all known by backend info about token
 ```sh
 ${yours_server_address}:9090/API/tbtcGeneralInfo
 ```
+___
+
+
 ### DEVELOPING
 
 ```
